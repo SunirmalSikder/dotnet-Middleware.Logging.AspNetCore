@@ -10,7 +10,7 @@
     <PackageTags>affecto logging log middleware aspnet core</PackageTags>
     <Description>Middleware for logging requests and errors in ASP.NET core applications.</Description>
     <PackageReleaseNotes />
-    <Version>1.0.0-prerelease01</Version>
+    <Version>1.0.0-prerelease02</Version>
   </PropertyGroup>
 
   <ItemGroup>
