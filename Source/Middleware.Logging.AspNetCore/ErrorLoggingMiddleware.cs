@@ -5,18 +5,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Affecto.Middleware.Logging.AspNetCore
 {
-    public class ErrorLoggingMiddleware
+    public class ErrorLoggingMiddleware : LoggingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly ILogger logger;
-
-        public ErrorLoggingMiddleware(RequestDelegate next, ILogger logger)
+        public ErrorLoggingMiddleware(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task Invoke(HttpContext context)
+        public override async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {

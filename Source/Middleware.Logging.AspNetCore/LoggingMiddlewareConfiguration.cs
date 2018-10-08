@@ -1,17 +1,20 @@
-﻿using Affecto.Logging;
+﻿using System;
+using Affecto.Logging;
 using Microsoft.AspNetCore.Http;
 
 namespace Affecto.Middleware.Logging.AspNetCore
 {
-    public abstract class LoggingMiddlewareConfiguration
+    public class LoggingMiddlewareConfiguration
     {
         public LogEventLevel LogEventLevel { get; }
+        public string LogMessageTemplate { get; }
+        public Func<HttpContext, object[]> LogMessageParameters { get; }
 
-        protected LoggingMiddlewareConfiguration(LogEventLevel logEventLevel)
+        public LoggingMiddlewareConfiguration(LogEventLevel logEventLevel, string logMessageTemplate, Func<HttpContext, object[]> logMessageParameters)
         {
             LogEventLevel = logEventLevel;
+            LogMessageTemplate = logMessageTemplate;
+            LogMessageParameters = logMessageParameters;
         }
-
-        public abstract (string LogMessageTemplate, object[] Parameters) GetLogMessageFormat(HttpContext context);
     }
 }

@@ -1,23 +1,18 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using Affecto.Logging;
 using Microsoft.AspNetCore.Http;
 
 namespace Affecto.Middleware.Logging.AspNetCore
 {
-    public class PerformanceLoggingMiddleware
+    public class PerformanceLoggingMiddleware : LoggingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly ILogger logger;
-
-        public PerformanceLoggingMiddleware(RequestDelegate next, ILogger logger)
+        public PerformanceLoggingMiddleware(ILoggerFactory loggerFactory)
+            : base(loggerFactory)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task Invoke(HttpContext context)
+        public override async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();

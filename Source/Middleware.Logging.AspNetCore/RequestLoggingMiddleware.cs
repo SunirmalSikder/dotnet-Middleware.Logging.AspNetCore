@@ -5,46 +5,30 @@ using Microsoft.AspNetCore.Http;
 
 namespace Affecto.Middleware.Logging.AspNetCore
 {
-    public class RequestLoggingMiddleware
+    public class RequestLoggingMiddleware : LoggingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly ILogger logger;
+        private readonly LoggingMiddlewareConfiguration configuration;
 
-        private readonly LoggingMiddlewareConfiguration configurationForRequestLog;
-
-        public RequestLoggingMiddleware(RequestDelegate next, ILogger logger, LoggingMiddlewareConfiguration configurationForRequestLog)
+        public RequestLoggingMiddleware(ILoggerFactory loggerFactory, LoggingMiddlewareConfiguration configuration)
+            : base(loggerFactory)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            this.configurationForRequestLog = configurationForRequestLog ?? throw new ArgumentNullException(nameof(configurationForRequestLog));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public RequestLoggingMiddleware(RequestDelegate next, ILogger logger)
-            : this(next, logger, new RequestLogConfiguration())
+        public RequestLoggingMiddleware(ILoggerFactory loggerFactory)
+            : this(loggerFactory,
+                new LoggingMiddlewareConfiguration(
+                    LogEventLevel.Information,
+                    "Incoming request - {Method}: {Path}, {Headers}",
+                    context => new object[] { context.Request.Method, context.Request.Path.Value, context.Request.Headers }))
         {
         }
 
-        public async Task Invoke(HttpContext context)
+        public override async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var (logMessageTemplate, parameters) = configurationForRequestLog.GetLogMessageFormat(context);
-            logger.Log(configurationForRequestLog.LogEventLevel, logMessageTemplate, parameters);
+            logger.Log(configuration.LogEventLevel, configuration.LogMessageTemplate, configuration.LogMessageParameters(context));
 
             await next(context);
-        }
-
-        private class RequestLogConfiguration : LoggingMiddlewareConfiguration
-        {
-            public RequestLogConfiguration()
-                : base(LogEventLevel.Information)
-            {
-            }
-
-            public override (string LogMessageTemplate, object[] Parameters) GetLogMessageFormat(HttpContext context)
-            {
-                return (LogMessageTemplate: "Incoming request - {Method}: {Path}, {Headers}",
-                    Parameters: new object[] { context.Request.Method, context.Request.Path.Value, context.Request.Headers });
-            }
         }
     }
 }
