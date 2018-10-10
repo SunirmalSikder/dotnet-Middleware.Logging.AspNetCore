@@ -7,8 +7,8 @@ namespace Affecto.Middleware.Logging.AspNetCore
 {
     public class PerformanceLoggingMiddleware : LoggingMiddleware
     {
-        public PerformanceLoggingMiddleware(ILoggerFactory loggerFactory)
-            : base(loggerFactory)
+        public PerformanceLoggingMiddleware(ILoggerFactory loggerFactory, ICorrelation correlation)
+            : base(loggerFactory, correlation)
         {
         }
 
@@ -20,7 +20,7 @@ namespace Affecto.Middleware.Logging.AspNetCore
             await next(context);
 
             stopWatch.Stop();
-            logger.LogInformation("Request executed in {RequestTime:000} ms - {Method}: {Path}",
+            logger.LogInformation(correlation, "Request executed in {RequestTime:000} ms - {Method}: {Path}",
                 stopWatch.ElapsedMilliseconds,
                 context.Request.Method,
                 context.Request.Path);

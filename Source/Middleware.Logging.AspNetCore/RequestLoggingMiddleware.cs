@@ -9,14 +9,14 @@ namespace Affecto.Middleware.Logging.AspNetCore
     {
         private readonly LoggingMiddlewareConfiguration configuration;
 
-        public RequestLoggingMiddleware(ILoggerFactory loggerFactory, LoggingMiddlewareConfiguration configuration)
-            : base(loggerFactory)
+        public RequestLoggingMiddleware(ILoggerFactory loggerFactory, ICorrelation correlation, LoggingMiddlewareConfiguration configuration)
+            : base(loggerFactory, correlation)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public RequestLoggingMiddleware(ILoggerFactory loggerFactory)
-            : this(loggerFactory,
+        public RequestLoggingMiddleware(ILoggerFactory loggerFactory, ICorrelation correlation)
+            : this(loggerFactory, correlation,
                 new LoggingMiddlewareConfiguration(
                     LogEventLevel.Information,
                     "Incoming request - {Method}: {Path}, {Headers}",
@@ -26,7 +26,7 @@ namespace Affecto.Middleware.Logging.AspNetCore
 
         public override async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            logger.Log(configuration.LogEventLevel, configuration.LogMessageTemplate, configuration.LogMessageParameters(context));
+            logger.Log(correlation, configuration.LogEventLevel, configuration.LogMessageTemplate, configuration.LogMessageParameters(context));
 
             await next(context);
         }

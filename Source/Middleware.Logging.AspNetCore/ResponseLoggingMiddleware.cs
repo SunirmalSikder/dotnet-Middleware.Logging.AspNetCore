@@ -9,14 +9,14 @@ namespace Affecto.Middleware.Logging.AspNetCore
     {
         private readonly LoggingMiddlewareConfiguration configuration;
 
-        public ResponseLoggingMiddleware(ILoggerFactory loggerFactory, LoggingMiddlewareConfiguration configuration)
-            : base(loggerFactory)
+        public ResponseLoggingMiddleware(ILoggerFactory loggerFactory, ICorrelation correlation, LoggingMiddlewareConfiguration configuration)
+            : base(loggerFactory, correlation)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public ResponseLoggingMiddleware(ILoggerFactory loggerFactory)
-            : this(loggerFactory,
+        public ResponseLoggingMiddleware(ILoggerFactory loggerFactory, ICorrelation correlation)
+            : this(loggerFactory, correlation,
                 new LoggingMiddlewareConfiguration(
                     LogEventLevel.Information,
                     "Outgoing response - {StatusCode}, {Headers}",
@@ -28,7 +28,7 @@ namespace Affecto.Middleware.Logging.AspNetCore
         {
             await next(context);
 
-            logger.Log(configuration.LogEventLevel, configuration.LogMessageTemplate, configuration.LogMessageParameters(context));
+            logger.Log(correlation, configuration.LogEventLevel, configuration.LogMessageTemplate, configuration.LogMessageParameters(context));
         }
     }
 }
