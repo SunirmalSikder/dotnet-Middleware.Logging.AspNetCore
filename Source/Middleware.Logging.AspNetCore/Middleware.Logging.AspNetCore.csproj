@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Affecto.Middleware.Logging.AspNetCore</AssemblyName>
+    <RootNamespace>Affecto.Middleware.Logging.AspNetCore</RootNamespace>
+    <Authors>Affecto</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/affecto/dotnet-Middleware.Logging.AspNetCore</PackageProjectUrl>
+    <PackageTags>affecto logging log middleware aspnet core</PackageTags>
+    <Description>Middleware for logging requests and errors in ASP.NET core applications.</Description>
+    <PackageReleaseNotes />
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Affecto.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>
