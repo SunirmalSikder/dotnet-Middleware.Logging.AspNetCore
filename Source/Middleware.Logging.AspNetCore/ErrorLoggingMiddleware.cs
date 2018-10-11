@@ -23,6 +23,7 @@ namespace Affecto.Middleware.Logging.AspNetCore
                 logger.LogError(correlation, e, "Unhandled exception from request - {Method}: {Path}",
                     context.Request.Method,
                     context.Request.Path.Value);
+                throw;
             }
         }
     }
