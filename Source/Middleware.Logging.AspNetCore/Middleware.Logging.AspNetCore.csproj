@@ -9,8 +9,8 @@
     <PackageProjectUrl>https://github.com/affecto/dotnet-Middleware.Logging.AspNetCore</PackageProjectUrl>
     <PackageTags>affecto logging log middleware aspnet core</PackageTags>
     <Description>Middleware for logging requests and errors in ASP.NET core applications.</Description>
-    <PackageReleaseNotes />
-    <Version>1.0.0</Version>
+    <PackageReleaseNotes>Bugfix: re-throw exception after logging it.</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
